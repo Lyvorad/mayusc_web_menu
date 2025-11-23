@@ -4,7 +4,7 @@ import { saludoGET, saludoPOST } from './api'
 export default function App() {
   const [nombre, setNombre] = useState('Luis')
   const [respuesta, setRespuesta] = useState(null)
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const [currentSection, setCurrentSection] = useState('inicio')
 
   const consultar = async () => {
@@ -17,8 +17,13 @@ export default function App() {
     setRespuesta(data.saludo)
   }
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen)
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen)
+  }
+
+  const selectSection = (section) => {
+    setCurrentSection(section)
+    setMenuOpen(false) // Cierra el menú al seleccionar
   }
 
   const renderSection = () => {
@@ -40,10 +45,14 @@ export default function App() {
         return (
           <div>
             <h1>Perfil de Usuario</h1>
-            <p>Esta es la sección de perfil</p>
-            <div className="profile-info">
-              <p>Nombre: {nombre}</p>
-              <p>Sección actual: Perfil</p>
+            <p>Gestiona tu perfil de usuario</p>
+            <div className="section-content">
+              <p>Nombre actual: {nombre}</p>
+              <input 
+                value={nombre} 
+                onChange={e => setNombre(e.target.value)}
+                placeholder="Cambiar nombre"
+              />
             </div>
           </div>
         )
@@ -51,24 +60,29 @@ export default function App() {
         return (
           <div>
             <h1>Configuración</h1>
-            <p>Configura tus preferencias aquí</p>
-            <div className="config-options">
-              <label>
-                <input type="checkbox" /> Notificaciones
-              </label>
-              <label>
-                <input type="checkbox" /> Modo oscuro
-              </label>
+            <p>Ajusta las configuraciones de la aplicación</p>
+            <div className="section-content">
+              <div className="setting">
+                <label>
+                  <input type="checkbox" /> Notificaciones por email
+                </label>
+              </div>
+              <div className="setting">
+                <label>
+                  <input type="checkbox" /> Modo oscuro
+                </label>
+              </div>
             </div>
           </div>
         )
       case 'ayuda':
         return (
           <div>
-            <h1>Ayuda y Soporte</h1>
-            <p>¿Necesitas ayuda? Contáctanos.</p>
-            <div className="help-content">
-              <p>Email: soporte@ejemplo.com</p>
+            <h1>Ayuda</h1>
+            <p>Centro de ayuda y soporte</p>
+            <div className="section-content">
+              <h3>Contacto</h3>
+              <p>Email: soporte@miapp.com</p>
               <p>Teléfono: +1 234 567 890</p>
             </div>
           </div>
@@ -85,67 +99,57 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {/* Header con botón de menú */}
+      {/* Header con botón de menú hamburguesa */}
       <header className="header">
-        <button className="menu-button" onClick={toggleSidebar}>
-          ☰
+        <button className="menu-toggle" onClick={toggleMenu}>
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
         <h1 className="header-title">Mi Aplicación</h1>
       </header>
 
-      <div className="main-content">
-        {/* Sidebar */}
-        <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
-          <nav className="sidebar-nav">
-            <button 
-              className={`nav-item ${currentSection === 'inicio' ? 'active' : ''}`}
-              onClick={() => {
-                setCurrentSection('inicio')
-                setSidebarOpen(false)
-              }}
-            >
-              Inicio
-            </button>
-            <button 
-              className={`nav-item ${currentSection === 'perfil' ? 'active' : ''}`}
-              onClick={() => {
-                setCurrentSection('perfil')
-                setSidebarOpen(false)
-              }}
-            >
-              Perfil
-            </button>
-            <button 
-              className={`nav-item ${currentSection === 'configuracion' ? 'active' : ''}`}
-              onClick={() => {
-                setCurrentSection('configuracion')
-                setSidebarOpen(false)
-              }}
-            >
-              Configuración
-            </button>
-            <button 
-              className={`nav-item ${currentSection === 'ayuda' ? 'active' : ''}`}
-              onClick={() => {
-                setCurrentSection('ayuda')
-                setSidebarOpen(false)
-              }}
-            >
-              Ayuda
-            </button>
-          </nav>
-        </aside>
+      {/* Menú lateral */}
+      <aside className={`sidebar ${menuOpen ? 'sidebar-open' : ''}`}>
+        <nav className="sidebar-nav">
+          <button 
+            className={`nav-item ${currentSection === 'inicio' ? 'active' : ''}`}
+            onClick={() => selectSection('inicio')}
+          >
+            Inicio
+          </button>
+          <button 
+            className={`nav-item ${currentSection === 'perfil' ? 'active' : ''}`}
+            onClick={() => selectSection('perfil')}
+          >
+            Perfil
+          </button>
+          <button 
+            className={`nav-item ${currentSection === 'configuracion' ? 'active' : ''}`}
+            onClick={() => selectSection('configuracion')}
+          >
+            Configuración
+          </button>
+          <button 
+            className={`nav-item ${currentSection === 'ayuda' ? 'active' : ''}`}
+            onClick={() => selectSection('ayuda')}
+          >
+            Ayuda
+          </button>
+        </nav>
+      </aside>
 
-        {/* Overlay para cerrar sidebar en móvil */}
-        {sidebarOpen && (
-          <div className="sidebar-overlay" onClick={toggleSidebar}></div>
-        )}
+      {/* Overlay para cerrar menú al hacer clic fuera */}
+      {menuOpen && (
+        <div className="menu-overlay" onClick={toggleMenu}></div>
+      )}
 
-        {/* Contenido principal */}
-        <main className="content">
+      {/* Contenido principal */}
+      <main className="main-content">
+        <div className="container">
           {renderSection()}
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   )
 }
