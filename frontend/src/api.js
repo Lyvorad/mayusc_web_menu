@@ -1,4 +1,4 @@
-const BASE = import.meta.env.VITE_API_URL || 'https://TU-API.onrender.com'
+const BASE = import.meta.env.VITE_API_URL || 'https://mayusc-service.onrender.com'
 
 export async function saludoGET(nombre = 'Luis'){
   const res = await fetch(`${BASE}/api/saludo?nombre=${encodeURIComponent(nombre)}`)
