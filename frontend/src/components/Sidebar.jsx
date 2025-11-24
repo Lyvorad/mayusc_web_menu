@@ -2,10 +2,10 @@ import React from 'react';
 
 export function Sidebar({ isOpen, currentSection, onSectionSelect, onClose }) {
   const menuItems = [
-    { id: 'inicio', label: 'Inicio' },
-    { id: 'perfil', label: 'Perfil' },
-    { id: 'configuracion', label: 'Configuración' },
-    { id: 'ayuda', label: 'Ayuda' }
+    { id: 'texttools', label: 'Text Tools' },
+    { id: 'profile', label: 'Profile' },
+    { id: 'settings', label: 'Settings' },
+    { id: 'help', label: 'Help' }
   ];
 
   const handleItemClick = (sectionId) => {
